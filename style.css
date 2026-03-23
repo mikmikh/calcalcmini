@@ -86,3 +86,28 @@ input {
 .bad {
   background-color: rgb(225, 123, 123);
 }
+
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Collapses borders into a single line */
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd; /* Light border for cells */
+    padding: 12px; /* Add space inside cells */
+    text-align: left; /* Align text to the left */
+}
+
+th {
+    background-color: #4CAF50; /* Green background for headers */
+    color: white;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff; /* Zebra-striping */
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Zebra-striping */
+}

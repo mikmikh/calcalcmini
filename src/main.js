@@ -9,7 +9,34 @@ function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+function createKey(dateStr) {
+  return `calcalcmini_${dateStr}`;
+}
+
 const GLOBAL_KEY = "calcalcmini_global";
+
+function getDateBefore(offset) {
+  const today = new Date();
+  const date = new Date(new Date().setDate(today.getDate() - offset));
+  return formatDate(date);
+}
+
+function getHistory(n = 31) {
+  const res = [];
+  for (let i = 0; i < n; i++) {
+    const dateStr = getDateBefore(i + 1);
+    const key = createKey(dateStr);
+    const data = localStorage.getItem(key);
+    const item = { date: dateStr, data: null };
+    try {
+      item.data = data ? JSON.parse(data) : null;
+    } catch (e) {
+      console.error(e);
+    }
+    res.push(item)
+  }
+  return res;
+}
 
 function main() {
   const DEFAULT_CONFIG = {
@@ -68,8 +95,7 @@ function main() {
 
   function setConfig(reset = false) {
     config = deepCopy(DEFAULT_CONFIG);
-    const dateStr = formatDate(new Date());
-    const key = `calcalcmini_${dateStr}`;
+    const key = createKey(formatDate(new Date()));
     if (reset) {
       localStorage.removeItem(key);
     }
@@ -219,8 +245,7 @@ function main() {
     const leftEl = document.querySelector(".counter-left");
     leftEl.textContent = config.total - sum;
 
-    const dateStr = formatDate(new Date());
-    const key = `calcalcmini_${dateStr}`;
+    const key = createKey(formatDate(new Date()));
     localStorage.setItem(key, JSON.stringify(config));
   }
 
@@ -238,6 +263,26 @@ function main() {
 
   setUp();
   update();
+
+  const history = getHistory();
+  const tbody = document.querySelector('.table tbody');
+  history.forEach((item) => {
+    const trEl = document.createElement('tr');
+    const dateEl = document.createElement('td');
+    dateEl.textContent=item.date;
+    trEl.appendChild(dateEl);
+    const spentEl = document.createElement('td');
+    spentEl.textContent=item.data.total;
+    trEl.appendChild(spentEl);
+    const consumedEl = document.createElement('td');
+    const consumed = item.data.counters.reduce((s,v) => s + +v.value*100,0);
+    consumedEl.textContent=consumed;
+    trEl.appendChild(consumedEl);
+    const lossEl = document.createElement('td');
+    lossEl.textContent=+item.data.total-consumed;
+    trEl.appendChild(lossEl);
+    tbody.appendChild(trEl);
+  })
 }
 
 main();
