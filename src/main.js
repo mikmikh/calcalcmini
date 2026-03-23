@@ -161,7 +161,7 @@ function main() {
     const totalEl = document.querySelector(".input-total");
     totalEl.addEventListener("change", (e) => {
       const valueRaw = +e.target.value;
-      const value = Math.min(30, Math.max(0, valueRaw));
+      const value = Math.min(30, Math.max(12, valueRaw));
       e.target.value = value;
       config.total = value * 100;
 
