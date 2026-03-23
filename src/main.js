@@ -219,6 +219,8 @@ function main() {
     const leftEl = document.querySelector(".counter-left");
     leftEl.textContent = config.total - sum;
 
+    const dateStr = formatDate(new Date());
+    const key = `calcalcmini_${dateStr}`;
     localStorage.setItem(key, JSON.stringify(config));
   }
 
