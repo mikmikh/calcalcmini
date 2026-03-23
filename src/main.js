@@ -9,6 +9,8 @@ function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+const GLOBAL_KEY = "calcalcmini_global";
+
 function main() {
   const DEFAULT_CONFIG = {
     total: 2400,
@@ -60,13 +62,27 @@ function main() {
     ],
   };
 
-  let config = deepCopy(DEFAULT_CONFIG);
+  let config = null;
 
-  const dateStr = formatDate(new Date());
-  const key = `calcalcmini_${dateStr}`;
-  const storageData = localStorage.getItem(key);
-  if (storageData) {
-    config = JSON.parse(storageData);
+  setConfig();
+
+  function setConfig(reset = false) {
+    config = deepCopy(DEFAULT_CONFIG);
+    const dateStr = formatDate(new Date());
+    const key = `calcalcmini_${dateStr}`;
+    if (reset) {
+      localStorage.removeItem(key);
+    }
+    const storageData = localStorage.getItem(key);
+    if (storageData) {
+      config = JSON.parse(storageData);
+    }
+
+    const globalData = localStorage.getItem(GLOBAL_KEY);
+    if (globalData) {
+      const globalDataDict = JSON.parse(globalData);
+      config = { ...config, ...globalDataDict };
+    }
   }
 
   function createCounterElement(counter) {
@@ -119,6 +135,13 @@ function main() {
   function setUp() {
     rootEl.innerHTML = `<div class="field"></div>
       <div class="header">
+      <div class="row title">
+            <span class="counter-left">0</span>
+            <span>Kcal</span>
+        </div>
+        <div class="row">
+            Remaining for Today
+        </div>
         <div class="row">
           <label
             >Spending:
@@ -132,13 +155,7 @@ function main() {
           </label>
           <span>x 100 Kcal / day</span>
         </div>
-        <div class="row">
-          <label
-            >Left:
-            <span class="counter-left">0</span>
-            <span>Kcal for Today</span>
-          </label>
-        </div>
+        
       </div>`;
 
     const totalEl = document.querySelector(".input-total");
@@ -147,6 +164,10 @@ function main() {
       const value = Math.min(30, Math.max(0, valueRaw));
       e.target.value = value;
       config.total = value * 100;
+
+      const globalData = { total: config.total };
+      localStorage.setItem(GLOBAL_KEY, JSON.stringify(globalData));
+
       update();
     });
     totalEl.value = config.total / 100;
@@ -162,7 +183,7 @@ function main() {
     config.counters.forEach((counter) => {
       const v = +counter.value * 100;
       sum += v;
-      const t = counter.type === 'other' ? 'carbs' : counter.type;
+      const t = counter.type === "other" ? "carbs" : counter.type;
       if (!(t in sumByType)) {
         sumByType[t] = 0;
       }
@@ -185,14 +206,14 @@ function main() {
       counter.element.classList.remove("good");
       counter.element.classList.remove("normal");
       counter.element.classList.remove("bad");
-      let cls =  "good";
+      let cls = "good";
       if (v > thld) {
         cls = "normal";
       }
-      if (v > thld * (1+0.2)) {
+      if (v > thld * (1 + 0.2)) {
         cls = "bad";
       }
-      counter.element.classList.add(counter.type === 'other' ? 'bad' : cls);
+      counter.element.classList.add(counter.type === "other" ? "bad" : cls);
     });
 
     const leftEl = document.querySelector(".counter-left");
@@ -207,7 +228,8 @@ function main() {
     if (!confirmed) {
       return;
     }
-    config = deepCopy(DEFAULT_CONFIG);
+    setConfig(true);
+    // localStorage.removeItem(GLOBAL_KEY);
     setUp();
     update();
   });

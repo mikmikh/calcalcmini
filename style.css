@@ -28,6 +28,8 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  padding-bottom: 1rem;
+  color:rgb(112, 110, 112)
 }
 .counter-icon {
   font-size: 2.5rem;
@@ -55,7 +57,7 @@ button {
 }
 input {
   font-size: 1rem;
-  width: 1.5rem;
+  width: 2rem;
 }
 .button-reset {
   margin-top: 2rem;
@@ -65,6 +67,9 @@ input {
   font-size: 1.8rem;
 }
 
+.counter-container {
+  padding-bottom: 0.5rem;
+}
 .counter-list {
   border-radius: 0.5rem;
 }
