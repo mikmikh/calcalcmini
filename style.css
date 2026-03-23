@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #ede0f0;
+}
+html,
+body {
+  height: 100vh;
+}
+
+.row {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.header {
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.counter-icon {
+  font-size: 2.5rem;
+}
+.counter-name {
+  flex-grow: 1;
+}
+.counter-list span {
+  font-size: 1.5rem;
+}
+.container {
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+button {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #723f80; /* Blue for action */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+input {
+  font-size: 1rem;
+  width: 1.5rem;
+}
+.button-reset {
+  margin-top: 2rem;
+}
+.title {
+  color: #723f80;
+  font-size: 1.8rem;
+}
+
+.counter-list {
+  border-radius: 0.5rem;
+}
+.good {
+  background-color: rgb(129, 239, 166);
+}
+.normal {
+  background-color: rgb(146, 244, 251);
+}
+.bad {
+  background-color: rgb(225, 123, 123);
+}
